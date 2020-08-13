@@ -43,7 +43,7 @@ function App() {
   const nextId = useRef(4)
 
   const onChangeInput =(e)=>{
-    console.log(e.target)
+    // console.log(e.target)
     const {name , value} = e.target
     setInputs({
       ...inputs,

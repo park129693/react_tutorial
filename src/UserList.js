@@ -1,5 +1,5 @@
 // useRef를 활용한 Component안에 변수 만들기
-import React from 'react'
+import React, {useEffect} from 'react'
 
 
 // function UserList(){
@@ -32,6 +32,16 @@ import React from 'react'
 //배열 항목 제거
 
 var User = ({user, onToggle ,onRemove})=>{
+
+    useEffect(()=>{
+        console.log('uers값 등장')
+        console.log(user)
+        return () =>{
+            console.log('user값 사라짐')
+            console.log(user)
+        }
+    },[])
+
     return (
         
                 <li Key={user.id}>
