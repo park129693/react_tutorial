@@ -1,100 +1,121 @@
-import React, { useRef , useState, useMemo, useCallback } from 'react';
-import Hello from './Hello'
-import Wrapper from './Wrapper'
-import Counter from './Counter'
-import InputSample from './InputSample'
+import React, { useRef , useState, useMemo, useCallback, useReducer } from 'react';
+
 import UserList from './UserList'
 import CreateUser from './CreateUser'
 
-
-function App() {
-
-  const countActiveUsers = useCallback( (users) => {
+const countActiveUsers = (users) => {
     console.log('활성화 사용자 수를 체크 하는 중')
     return users.filter(user=>user.active).length;
-  })
- 
-  const [users , setUsers] = useState (
-    [
-      {
-          id:1,
-          username:"KIM",
-          email:"1@naver.com",
-          active:true
-      },
-      {
-          id:2,
-          username:"PARK",
-          email:"2@naver.com",
-          active:false
-
-      },
-      {
-          id:3,
-          username:"SONG",
-          email:"3@naver.com",
-          active:false
-      }
-  ]
-  )
-
-  const [inputs , setInputs] = useState({
-    username:'',
-    email:''
-
-   })
-
-  const {username , email} = inputs
-  const nextId = useRef(4)
-
-  const onChangeInput = useCallback( (e)=>{
-    // console.log(e.target)
-    const {name , value} = e.target
-    setInputs({
-      ...inputs,
-      [name] :value
-    });
-  })
-  const onCreate =useCallback(()=>{
-    const user = {
-      id:nextId.current,
-       username,
-       email
-    }
-    setUsers([...users,user])
-    
-    setInputs({
-      username:'',
-      email:''
-    })
-    nextId.current +=1
-  }, [inputs])
-
-  const onRemove = (id) =>{
-    setUsers(users.filter(user=>user.id !== id))
   }
 
-  const onToggleFunc = useCallback((id) =>{
-    setUsers(users.map(
-      user=>user.id === id ? {...user, active: !user.active} : user
-    ))
-  }, [users])
+const initialState = {
 
-  const count =useMemo(() => countActiveUsers(users), [users])
+    users:[
+            {
+                id:1,
+                username:"KIM",
+                email:"1@naver.com",
+                active:true
+            },
+            {
+                id:2,
+                username:"PARK",
+                email:"2@naver.com",
+                active:false
+  
+            },
+            {
+                id:3,
+                username:"SONG",
+                email:"3@naver.com",
+                active:false
+            }
+    
+        ],
 
-  return (
-      <>
-      <Wrapper>
-      <Hello name="John"  color="red" isSpecial={true} />
-      <Hello  color="blue" />
-      </Wrapper>
-      <Counter />
-      <InputSample />
-      <CreateUser user={username} useremail={email} onChange={onChangeInput}  onCreate={onCreate}/>
-      <UserList  users={users} onRemove={onRemove} onToggle={onToggleFunc}/>
-      <div>활성자 수: {count}</div>
-      </>
-  );
+        inputs : {
+            username:'',
+            email:''
+        }
+}
+function reducer(state, action){
+    switch(action.type) {
+        case 'CHANGE_INPUT':
+            return {
+                ...state,
+                inputs:{
+                    ...state.inputs,
+                    [action.name]:action.value
+                }
+            };
+        case 'CREATE_USER':
+            return {
+                inputs:initialState.inputs,
+                users:state.users.concat(action.user)
+            }
+        case 'TOGGLE_USER':
+            return {
+                ...state,
+                users:state.users.map(user=> user.id === action.id ? {...user, active: !user.active}: user)
+            }
+        
+        case 'REMOVE_USER':
+            return {
+                ...state,
+                users:state.users.filter(user=>user.id !== action.id)
+            }
+
+        default:
+            return state;
+    }
+}
+
+function App() {
+    const [state, dispatch] = useReducer(reducer, initialState);
+
+    function onChangeInput(e){
+        const {name, value} = e.target
+        // console.log(value)
+        dispatch({
+            type:'CHANGE_INPUT',
+            name,
+            value
+        },[])
+    }
+
+    function onCreate(){
+        dispatch({
+            type:'CREATE_USER',
+            username,
+            email
+        },[])
+    }
+
+    function onToggle(id){
+        dispatch({
+            type:'TOGGLE_USER',
+            id
+        },[])
+    }
+
+    function onRemove(id) {
+        dispatch({
+            type:'REMOVE_USER',
+            id
+        })
+    }
+
+    const { users } =state
+    const {username, email} = state.inputs
+
+    return (
+        <>
+        <CreateUser user={username} useremail={email} onChange={onChangeInput} onCreate={onCreate}/>
+        <UserList users={users} onToggle={onToggle}/>
+        <div> 활성자 수: 0 </div>
+        </>
+
+    )
 }
 
 export default App;
