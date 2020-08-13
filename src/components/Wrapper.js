@@ -5,8 +5,8 @@ import React from 'react'
 
 function Wrapper({children}){
     const style={
-        border:'2px solid black ',
-        padding:'16px'
+        border:'5px solid black ',
+        padding:'20px'
     }
     return (
 
