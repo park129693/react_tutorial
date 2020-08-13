@@ -113,7 +113,7 @@ function App() {
         <>
         <CreateUser user={username} useremail={email} onChange={onChangeInput} onCreate={onCreate}/>
         <UserList users={users} onToggle={onToggle} onRemove={onRemove}/>
-        <div> 활성자 수: {count}} </div>
+        <div> 활성자 수: {count} </div>
         </>
 
     )
