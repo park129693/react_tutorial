@@ -31,11 +31,11 @@ import React from 'react'
 
 //배열 항목 제거
 
-var User = ({user, onRemove})=>{
+var User = ({user, onToggle ,onRemove})=>{
     return (
         
                 <li Key={user.id}>
-                    <b>{user.username } : </b> <span> {user.email}</span>
+                    <b style={{corsor:"pointer", color:user.active ? 'green' : 'blue'}} onClick={() => onToggle(user.id)}> {user.username } : </b> <span> {user.email}</span>
                     <button onClick={()=>onRemove(user.id)}>삭제</button>
                 </li>
 
@@ -43,13 +43,13 @@ var User = ({user, onRemove})=>{
 }
 
 
-function UserList({users, onRemove}){
-    
+function UserList({users,onToggle ,onRemove}){
+
     return (
         <div>
             <ul>
                 {users.map(user =>(
-                    <User user= {user} onRemove={onRemove}/>
+                    <User user= {user} onRemove={onRemove} onToggle={onToggle}/>
                 ))
                 } 
             </ul>

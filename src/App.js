@@ -14,17 +14,21 @@ function App() {
       {
           id:1,
           username:"KIM",
-          email:"1@naver.com"
+          email:"1@naver.com",
+          active:true
       },
       {
           id:2,
           username:"PARK",
-          email:"2@naver.com"
+          email:"2@naver.com",
+          active:false
+
       },
       {
           id:3,
           username:"SONG",
-          email:"3@naver.com"
+          email:"3@naver.com",
+          active:false
       }
   ]
   )
@@ -63,7 +67,12 @@ function App() {
 
   const onRemove = (id) =>{
     setUsers(users.filter(user=>user.id !== id))
+  }
 
+  const onToggleFunc = (id) =>{
+    setUsers(users.map(
+      user=>user.id === id ? {...user, active: !user.active} : user
+    ))
   }
 
   return (
@@ -75,7 +84,7 @@ function App() {
       <Counter />
       <InputSample />
       <CreateUser user={username} useremail={email} onChange={onChangeInput}  onCreate={onCreate}/>
-      <UserList  users={users} onRemove={onRemove}/>
+      <UserList  users={users} onRemove={onRemove} onToggle={onToggleFunc}/>
       </>
   );
 }
