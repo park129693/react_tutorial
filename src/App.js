@@ -1,4 +1,4 @@
-import React, { useRef , useState, useMemo, useCallback, useReducer } from 'react';
+import React, { useMemo, useReducer } from 'react';
 
 import UserList from './UserList'
 import CreateUser from './CreateUser'
@@ -107,12 +107,13 @@ function App() {
 
     const { users } =state
     const {username, email} = state.inputs
+    const count = useMemo(()=>countActiveUsers(users), [users])
 
     return (
         <>
         <CreateUser user={username} useremail={email} onChange={onChangeInput} onCreate={onCreate}/>
-        <UserList users={users} onToggle={onToggle}/>
-        <div> 활성자 수: 0 </div>
+        <UserList users={users} onToggle={onToggle} onRemove={onRemove}/>
+        <div> 활성자 수: {count}} </div>
         </>
 
     )
