@@ -68,7 +68,7 @@ function App() {
       email:''
     })
     nextId.current +=1
-  }), [inputs]
+  }, [inputs])
 
   const onRemove = (id) =>{
     setUsers(users.filter(user=>user.id !== id))
